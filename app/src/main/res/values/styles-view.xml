@@ -1,0 +1,14 @@
+<resources>
+
+    <!--存放view的一致样式，避免到处重复写样式-->
+    <style name="CustomButtonStyle">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@drawable/selector_btn_orange</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@id/container"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:background="@drawable/selector_btn_orange"
+            android:textColor="@android:color/white"
+            android:text="按钮1"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="22sp"
+            android:background="@drawable/selector_btn_orange"
+            android:textColor="@android:color/white"
+            android:text="按钮2"/>
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@id/navigation"
+        android:layout_width="fill_parent"
+        android:layout_height="48.0dip"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:background="?android:windowBackground"/>
+</LinearLayout>

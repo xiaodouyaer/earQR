@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- QR Code IDs -->
+    <item name="decode" type="id"/>
+    <item name="decode_failed" type="id"/>
+    <item name="decode_succeeded" type="id"/>
+    <item name="quit" type="id"/>
+    <item name="restart_preview" type="id"/>
+    <item name="return_scan_result" type="id"/>
+
+    <!-- QR Code IDs -->
+    <item type="id" name="auto_focus"/>
+    <item type="id" name="encode_failed"/>
+    <item type="id" name="encode_succeeded"/>
+    <item type="id" name="tag_first"/>
+    <item type="id" name="tag_second"/>
+    <item type="id" name="skip"/>
+    <item type="id" name="launch_product_query"/>
+    <item type="id" name="fl_zxing_container"/>
+    <item type="id" name="preview_view"/>
+    <item type="id" name="viewfinder_view_mark"/>
+    <item type="id" name="ll_sdsr"/>
+    <item type="id" name="sdt_iv"/>
+    <item type="id" name="sdt_tv"/>
+    <item type="id" name="content"/>
+    <item type="id" name="navigation"/>
+
+</resources>
