@@ -71,11 +71,11 @@ public class CaptureFragment extends Fragment implements Callback {
                 localAssetFileDescriptor = getResources().openRawResourceFd(R.raw.beep);
                 this.mediaPlayer.setDataSource(localAssetFileDescriptor.getFileDescriptor(), localAssetFileDescriptor.getStartOffset(), localAssetFileDescriptor.getLength());
                 localAssetFileDescriptor.close();
+                this.mediaPlayer.setVolume(0.1F, 0.1F);
+                this.mediaPlayer.prepare();
             }
-            this.mediaPlayer.setVolume(0.1F, 0.1F);
-            this.mediaPlayer.prepare();
             return;
-        } catch (IOException localIOException) {
+        } catch (Exception localIOException) {
             localIOException.printStackTrace();
         }
         this.mediaPlayer = null;
