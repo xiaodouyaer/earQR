@@ -59,6 +59,9 @@ public class CaptureFragment extends Fragment implements Callback {
     private SurfaceView surfaceView;
     private boolean vibrate;
     private ViewfinderView viewfinderView;
+    private int type;
+    private int decodeType;
+
 
     private void initBeepSound() {
         try {
@@ -81,12 +84,16 @@ public class CaptureFragment extends Fragment implements Callback {
         this.mediaPlayer = null;
     }
 
-    private void initCamera(SurfaceHolder paramSurfaceHolder) {
+    private void initCamera(SurfaceHolder paramSurfaceHolder,int decodeType) {
         try {
             CameraManager.get().openDriver(paramSurfaceHolder);
             this.camera = CameraManager.get().getCamera();
             if (this.handler == null) {
-                this.handler = new CaptureActivityHandler(this, this.decodeFormats, this.characterSet, this.viewfinderView);
+                this.handler = new CaptureActivityHandler(this,
+                        this.decodeFormats,
+                        this.characterSet,
+                        this.viewfinderView,
+                        decodeType);
             }
             return;
         } catch (IOException e) {
@@ -129,6 +136,11 @@ public class CaptureFragment extends Fragment implements Callback {
         CameraManager.init(getActivity().getApplication());
         this.hasSurface = false;
         this.inactivityTimer = new InactivityTimer(getActivity());
+
+        Bundle arguments = getArguments();
+        if (arguments != null){
+            decodeType = arguments.getInt("decodeType",404);
+        }
     }
 
     @Nullable
@@ -170,7 +182,7 @@ public class CaptureFragment extends Fragment implements Callback {
     public void onResume() {
         super.onResume();
         if (this.hasSurface) {
-            initCamera(this.surfaceHolder);
+            initCamera(this.surfaceHolder,decodeType);
         } else {
             this.surfaceHolder.addCallback(this);
             this.surfaceHolder.setType(3);
@@ -193,7 +205,7 @@ public class CaptureFragment extends Fragment implements Callback {
     public void surfaceCreated(SurfaceHolder paramSurfaceHolder) {
         if (!this.hasSurface) {
             this.hasSurface = true;
-            initCamera(paramSurfaceHolder);
+            initCamera(paramSurfaceHolder,decodeType);
         }
     }
 
@@ -210,9 +222,3 @@ public class CaptureFragment extends Fragment implements Callback {
         }
     }
 }
-
-
-/* Location:              G:\Android_逆向\liuchaoya\动检通湖北\classes-dex2jar.jar!\cn\ac\ict\earmarktest\camera\activity\CaptureFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

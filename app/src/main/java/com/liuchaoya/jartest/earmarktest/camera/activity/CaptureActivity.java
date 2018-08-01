@@ -33,6 +33,9 @@ public class CaptureActivity
         super.onCreate(paramBundle);
         setContentView(R.layout.camera);
         CaptureFragment fragment = new CaptureFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("decodeType",200);
+        fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_zxing_container, fragment).commit();
         initDisplayOpinion();
     }

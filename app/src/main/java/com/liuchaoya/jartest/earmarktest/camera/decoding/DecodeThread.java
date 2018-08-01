@@ -16,10 +16,16 @@ final class DecodeThread extends Thread {
     private final CaptureFragment fragment;
     private Handler handler;
     private final CountDownLatch handlerInitLatch;
+    private int decodeType;
 
-    DecodeThread(CaptureFragment paramCaptureFragment, Vector<BarcodeFormat> paramVector, String paramString, ResultPointCallback paramResultPointCallback) {
+    DecodeThread(CaptureFragment paramCaptureFragment,
+                 Vector<BarcodeFormat> paramVector,
+                 String paramString,
+                 ResultPointCallback paramResultPointCallback,
+                 int decodeType) {
         this.fragment = paramCaptureFragment;
         this.handlerInitLatch = new CountDownLatch(1);
+        this.decodeType = decodeType;
     }
 
     Handler getHandler() {
@@ -34,7 +40,7 @@ final class DecodeThread extends Thread {
 
     public void run() {
         Looper.prepare();
-        this.handler = new DecodeHandler(this.fragment);
+        this.handler = new DecodeHandler(this.fragment,decodeType);
         this.handlerInitLatch.countDown();
         Looper.loop();
     }

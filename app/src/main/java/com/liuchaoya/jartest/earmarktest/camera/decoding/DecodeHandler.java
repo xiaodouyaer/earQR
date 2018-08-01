@@ -7,6 +7,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.DecodeHintType;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.ReaderException;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 import com.liuchaoya.jartest.R;
 import com.liuchaoya.jartest.earmarktest.camera.activity.CaptureFragment;
 import com.synqe.Barcode.ResultObject.DecodeImageData_Result;
@@ -14,6 +20,7 @@ import com.synqe.Barcode.ResultObject.DecodeImageData_Result;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.EnumMap;
 
 import cn.ac.ict.earmark.CodeUtils;
 import cn.ac.ict.earmarktest.camera.CameraManager;
@@ -23,12 +30,76 @@ import cn.ac.ict.earmarktest.camera.PlanarYUVLuminanceSource;
 final class DecodeHandler extends Handler {
     private static final String TAG = "DecodeHandler";
     private final CaptureFragment fragment;
+    private EnumMap<DecodeHintType, Object> hints;
+    private int decodeType;
+    private MultiFormatReader multiFormatReader;
 
-    DecodeHandler(CaptureFragment paramCaptureFragment) {
+
+    DecodeHandler(CaptureFragment paramCaptureFragment, int decodeType) {
         this.fragment = paramCaptureFragment;
+        this.decodeType = decodeType;
+        if (this.decodeType == 100){
+            this.multiFormatReader = new MultiFormatReader();
+            hints = new EnumMap<>(DecodeHintType.class);
+
+        }
     }
 
     private void decode(byte[] paramArrayOfByte, int paramInt1, int paramInt2) {
+        if (decodeType == 100) {
+            decodeQR(paramArrayOfByte, paramInt1, paramInt2);
+        } else {
+            decodeEAR(paramArrayOfByte, paramInt1, paramInt2);
+        }
+    }
+
+    private void decodeQR(byte[] data, int paramInt1, int paramInt2) {
+        byte[] localObject1 = new byte[data.length];
+        int i = 0;
+        while (i < paramInt2) {
+            int j = 0;
+            while (j < paramInt1) {
+                localObject1[(j * paramInt2 + paramInt2 - i - 1)] = data[(i * paramInt1 + j)];
+                j += 1;
+            }
+            i += 1;
+        }
+
+//        // 这里需要将获取的data翻转一下，因为相机默认拿的的横屏的数据
+//        byte[] rotatedData = new byte[data.length];
+//        for (int y = 0; y < size.height; y++) {
+//            for (int x = 0; x < size.width; x++)
+//                rotatedData[x * size.height + size.height - y - 1] = data[x + y * size.width];
+//        }
+//
+//        // 宽高也要调整
+//        int tmp = size.width;
+//        size.width = size.height;
+//        size.height = tmp;
+
+        Result rawResult = null;
+        com.google.zxing.PlanarYUVLuminanceSource source = buildLuminanceSource(data, paramInt2, paramInt1);
+        BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+        try {
+            rawResult = multiFormatReader.decodeWithState(bitmap);
+        } catch (ReaderException re) {
+            // continue
+        } finally {
+            multiFormatReader.reset();
+        }
+        if (rawResult == null){
+            System.out.println("11111Result is null");
+        }else {
+            System.out.println("22222" + rawResult.getText());
+        }
+    }
+
+    private com.google.zxing.PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int width, int height) {
+        // Go ahead and assume it's YUV rather than die.
+        return new com.google.zxing.PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+    }
+
+    private void decodeEAR(byte[] paramArrayOfByte, int paramInt1, int paramInt2) {
         byte[] localObject1 = new byte[paramArrayOfByte.length];
         int i = 0;
         while (i < paramInt2) {
@@ -45,6 +116,7 @@ final class DecodeHandler extends Handler {
         paramArrayOfByte = null;
         try {
             long l1 = System.currentTimeMillis();
+
             DecodeImageData_Result result = CodeUtils.analyzeBitmap(bitmap, true);
             long l2 = System.currentTimeMillis();
             Object localObject2 = new StringBuilder();
@@ -111,7 +183,6 @@ final class DecodeHandler extends Handler {
             return;
         }
         Message.obtain(this.fragment.getHandler(), R.id.decode_failed).sendToTarget();
-        return;
     }
 
     public void handleMessage(Message paramMessage) {

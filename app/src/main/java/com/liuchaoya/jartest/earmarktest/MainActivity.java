@@ -1,5 +1,6 @@
 package com.liuchaoya.jartest.earmarktest;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +32,7 @@ import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks;
 public class MainActivity
         extends AppCompatActivity
         implements PermissionCallbacks {
-    private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+    private static String[] PERMISSIONS_CAMERA = {Manifest.permission.CAMERA};
     public static final int REQUEST_CAMERA_PERM = 101;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final int REQUEST_IMAGE = 112;
@@ -46,23 +47,27 @@ public class MainActivity
         verifyStoragePermissions(this);
     }
 
-    private void onClick() {
-        startActivityForResult(new Intent(getApplication(), CaptureActivity.class),200);
+    private void onClick(int buttonId) {
+        if (buttonId == R.id.button){
+            startActivityForResult(new Intent(getApplication(), com.liuchaoya.jartest.zxing.activity.CaptureActivity.class),200);
+        }else {
+            startActivityForResult(new Intent(getApplication(), CaptureActivity.class),200);
+        }
     }
 
     public static void verifyStoragePermissions(Activity paramActivity) {
-        if (ActivityCompat.checkSelfPermission(paramActivity, "android.permission.WRITE_EXTERNAL_STORAGE") != 0) {
-            ActivityCompat.requestPermissions(paramActivity, PERMISSIONS_STORAGE, 1);
+        if (ActivityCompat.checkSelfPermission(paramActivity, Manifest.permission.CAMERA) != 0) {
+            ActivityCompat.requestPermissions(paramActivity, PERMISSIONS_CAMERA, 1);
         }
     }
 
     @AfterPermissionGranted(101)
-    public void cameraTask() {
-        if (EasyPermissions.hasPermissions(this, new String[]{"android.permission.CAMERA"})) {
-            onClick();
+    public void cameraTask(int buttonId) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA)) {
+            onClick(buttonId);
             return;
         }
-        EasyPermissions.requestPermissions(this, "需要请求camera权限", 101, new String[]{"android.permission.CAMERA"});
+        EasyPermissions.requestPermissions(this, "需要请求camera权限", 101, Manifest.permission.CAMERA);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent paramIntent) {
@@ -206,14 +211,14 @@ public class MainActivity
         }
 
         public void onClick(View paramView) {
-            if (paramView.getId() == R.id.button) {
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
-                intent.addCategory("android.intent.category.OPENABLE");
-                intent.setType("image/*");
-                MainActivity.this.startActivityForResult(intent, 112);
-                return;
-            }
-            MainActivity.this.cameraTask();
+//            if (paramView.getId() == R.id.button) {
+//                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+//                intent.addCategory("android.intent.category.OPENABLE");
+//                intent.setType("image/*");
+//                MainActivity.this.startActivityForResult(intent, 112);
+//                return;
+//            }
+            MainActivity.this.cameraTask(buttonId);
         }
     }
 }

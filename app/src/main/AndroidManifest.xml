@@ -28,6 +28,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".earmarktest.ResultActivity"/>
+        <activity android:name=".zxing.activity.CaptureActivity"/>
 
     </application>
 

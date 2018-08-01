@@ -26,9 +26,17 @@ public final class CaptureActivityHandler
     private final CaptureFragment fragment;
     private CaptureActivityHandler.State state;
 
-    public CaptureActivityHandler(CaptureFragment paramCaptureFragment, Vector<BarcodeFormat> paramVector, String paramString, ViewfinderView paramViewfinderView) {
+    public CaptureActivityHandler(CaptureFragment paramCaptureFragment,
+                                  Vector<BarcodeFormat> paramVector,
+                                  String paramString,
+                                  ViewfinderView paramViewfinderView,
+                                  int decodeType) {
         this.fragment = paramCaptureFragment;
-        this.decodeThread = new DecodeThread(paramCaptureFragment, paramVector, paramString, new ViewfinderResultPointCallback(paramViewfinderView));
+        this.decodeThread = new DecodeThread(paramCaptureFragment,
+                paramVector,
+                paramString,
+                new ViewfinderResultPointCallback(paramViewfinderView),
+                decodeType);
         this.decodeThread.start();
         this.state = CaptureActivityHandler.State.SUCCESS;
         CameraManager.get().startPreview();
